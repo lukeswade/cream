@@ -162,7 +162,7 @@ npm run pages:build
 
 **Build output directory:**
 ```
-.open-next
+.open-next/assets
 ```
 
 **Environment variables:**
