@@ -1,23 +1,26 @@
 import { PrismaClient } from '@prisma/client'
-import { PrismaNeon } from '@prisma/adapter-neon'
-import { neonConfig } from '@neondatabase/serverless'
-import ws from 'ws'
-
-// Required for Cloudflare Workers/Pages - configure WebSocket only in non-browser environments
-if (typeof WebSocket === 'undefined') {
-  neonConfig.webSocketConstructor = ws
-}
+import { PrismaPg } from '@prisma/adapter-pg'
+import { Pool } from 'pg'
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
 function createPrismaClient() {
-  const connectionString = process.env.DATABASE_URL || '******localhost:5432/placeholder'
+  const connectionString = process.env.DATABASE_URL
   
-  const adapter = new PrismaNeon({ connectionString })
+  if (!connectionString) {
+    // For build time when DATABASE_URL might not be set
+    return new PrismaClient()
+  }
+
+  const pool = new Pool({ connectionString })
+  const adapter = new PrismaPg(pool)
   
-  return new PrismaClient({ adapter })
+  return new PrismaClient({
+    adapter,
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  })
 }
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient()
