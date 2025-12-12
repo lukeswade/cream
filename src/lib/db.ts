@@ -13,12 +13,8 @@ const globalForPrisma = globalThis as unknown as {
 }
 
 function createPrismaClient() {
-  const connectionString = process.env.DATABASE_URL
+  const connectionString = process.env.DATABASE_URL || '******localhost:5432/placeholder'
   
-  if (!connectionString) {
-    return new PrismaClient()
-  }
-
   const adapter = new PrismaNeon({ connectionString })
   
   return new PrismaClient({ adapter })
