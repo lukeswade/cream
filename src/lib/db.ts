@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { PrismaNeon } from '@prisma/adapter-neon'
-import { Pool, neonConfig } from '@neondatabase/serverless'
+import { neonConfig } from '@neondatabase/serverless'
 
 // Required for Cloudflare Workers/Pages
 import ws from 'ws'
@@ -17,8 +17,7 @@ function createPrismaClient() {
     return new PrismaClient()
   }
 
-  const pool = new Pool({ connectionString })
-  const adapter = new PrismaNeon(pool)
+  const adapter = new PrismaNeon({ connectionString })
   
   return new PrismaClient({ adapter })
 }
