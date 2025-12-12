@@ -7,13 +7,9 @@ const globalForPrisma = globalThis as unknown as {
 }
 
 function createPrismaClient() {
-  const connectionString = process.env.DATABASE_URL
+  // Use DATABASE_URL if available, otherwise use a placeholder for build time
+  const connectionString = process.env.DATABASE_URL || 'postgresql://localhost:5432/placeholder'
   
-  if (!connectionString) {
-    // For build time when DATABASE_URL might not be set
-    return new PrismaClient()
-  }
-
   const pool = new Pool({ connectionString })
   const adapter = new PrismaPg(pool)
   

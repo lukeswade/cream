@@ -24,18 +24,20 @@ A modern, full-featured web application for sharing and discovering Ninja CREAMi
 
 ## 🚀 Tech Stack
 
-- **Framework**: Next.js 14+ (App Router)
+- **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
-- **Database**: PostgreSQL with Prisma ORM
+- **Database**: Neon PostgreSQL (serverless) with Prisma ORM
+- **Database Adapter**: @prisma/adapter-neon for edge runtime compatibility
 - **Authentication**: NextAuth.js
 - **AI Integration**: OpenAI API
 - **Icons**: Lucide React
+- **Deployment**: Cloudflare Pages with @opennextjs/cloudflare
 
 ## 📋 Prerequisites
 
-- Node.js 18+ 
-- PostgreSQL database
+- Node.js 20+ 
+- Neon PostgreSQL database (for Cloudflare Pages deployment) or standard PostgreSQL (for local dev)
 - npm or yarn
 
 ## 🛠️ Installation
@@ -137,9 +139,46 @@ npm run dev          # Start development server
 npm run build        # Build for production
 npm run start        # Start production server
 npm run lint         # Run ESLint
+npm run pages:build  # Build for Cloudflare Pages
+npm run preview      # Preview Cloudflare build locally
 npx prisma studio    # Open Prisma Studio (database GUI)
 npx prisma migrate   # Run database migrations
 ```
+
+## ☁️ Cloudflare Pages Deployment
+
+This application is configured for deployment on Cloudflare Pages using OpenNext.
+
+### Prerequisites
+- Cloudflare account
+- Neon PostgreSQL database (serverless-compatible)
+
+### Cloudflare Pages Settings
+
+**Build command:**
+```bash
+npm run pages:build
+```
+
+**Build output directory:**
+```
+.open-next
+```
+
+**Environment variables:**
+```env
+DATABASE_URL=your-neon-connection-string-with-pooling
+NEXTAUTH_URL=https://your-domain.com
+NEXTAUTH_SECRET=your-secret-key
+OPENAI_API_KEY=your-openai-api-key
+```
+
+**Important Notes:**
+- The build uses `@opennextjs/cloudflare` for Next.js 16 compatibility
+- Database uses `@prisma/adapter-neon` for edge runtime support
+- Do NOT use `npx @cloudflare/next-on-pages` (deprecated) - use `npm run pages:build` instead
+- The app automatically falls back to a placeholder DATABASE_URL during build if not set
+- Actual DATABASE_URL from environment variables is used at runtime
 
 ## 🗄️ Database Schema
 
