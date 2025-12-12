@@ -1,10 +1,12 @@
 import { PrismaClient } from '@prisma/client'
 import { PrismaNeon } from '@prisma/adapter-neon'
 import { neonConfig } from '@neondatabase/serverless'
-
-// Required for Cloudflare Workers/Pages
 import ws from 'ws'
-neonConfig.webSocketConstructor = ws
+
+// Required for Cloudflare Workers/Pages - configure WebSocket only in non-browser environments
+if (typeof WebSocket === 'undefined') {
+  neonConfig.webSocketConstructor = ws
+}
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
