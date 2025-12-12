@@ -79,7 +79,7 @@ export default function SignUpPage() {
         router.push('/')
         router.refresh()
       }
-    } catch (error) {
+    } catch {
       setError('Something went wrong')
     } finally {
       setIsLoading(false)
