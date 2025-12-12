@@ -41,6 +41,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/ws": "^8.5.13",
+    "dotenv": "^17.2.3",
     "esbuild": "^0.27.1",
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
