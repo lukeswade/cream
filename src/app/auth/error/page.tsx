@@ -32,12 +32,16 @@ export default function AuthErrorPage() {
         </div>
 
         <div className="space-y-3">
-          <Button asChild variant="primary" size="lg" className="w-full">
-            <Link href="/auth/signin">Return to sign in</Link>
-          </Button>
-          <Button asChild variant="outline" size="lg" className="w-full">
-            <Link href="/">Go to home</Link>
-          </Button>
+          <Link href="/auth/signin" className="block">
+            <Button variant="primary" size="lg" className="w-full">
+              Return to sign in
+            </Button>
+          </Link>
+          <Link href="/" className="block">
+            <Button variant="outline" size="lg" className="w-full">
+              Go to home
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
