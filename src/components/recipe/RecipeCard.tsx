@@ -39,7 +39,7 @@ export default function RecipeCard({ recipe, onLike, onSave }: RecipeCardProps) 
           text: recipe.description || '',
           url: `/recipe/${recipe.id}`,
         })
-      } catch (err) {
+      } catch {
         console.log('Share cancelled')
       }
     }
@@ -51,11 +51,14 @@ export default function RecipeCard({ recipe, onLike, onSave }: RecipeCardProps) 
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden bg-gray-200 dark:bg-gray-700">
           {recipe.images && recipe.images.length > 0 ? (
-            <img
-              src={recipe.images[0]}
-              alt={recipe.title}
-              className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
-            />
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={recipe.images[0]}
+                alt={recipe.title}
+                className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </>
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-pink-400 to-purple-500">
               <span className="text-4xl text-white">🍦</span>

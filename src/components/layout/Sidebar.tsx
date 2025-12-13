@@ -1,42 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
-import {
-  User,
-  Settings,
-  Moon,
-  Sun,
-  Bell,
-  Shield,
-  HelpCircle,
-  LogOut,
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react'
+import { Home, BookOpen, Users, Book, Sparkles, Moon, Sun, LogOut, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/utils/cn'
+import { useTheme } from '@/context/ThemeProvider'
 
 export default function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false)
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+  const [isCollapsed, setIsCollapsed] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  )
+  const { theme, toggleTheme } = useTheme()
   const { data: session } = useSession()
-
-  useEffect(() => {
-    // Get theme from localStorage or system preference
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light'
-    setTheme(savedTheme || systemTheme)
-  }, [])
-
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light'
-    setTheme(newTheme)
-    localStorage.setItem('theme', newTheme)
-    document.documentElement.classList.toggle('dark', newTheme === 'dark')
-  }
 
   const handleSignOut = async () => {
     await signOut({ callbackUrl: '/' })
@@ -45,7 +21,7 @@ export default function Sidebar() {
   return (
     <aside
       className={cn(
-        'fixed left-0 top-0 z-40 h-screen transition-all duration-300 ease-in-out',
+        'fixed left-0 top-0 z-40 h-screen transition-all duration-300 ease-in-out hidden md:block',
         'bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800',
         isCollapsed ? 'w-16' : 'w-64'
       )}
@@ -76,11 +52,14 @@ export default function Sidebar() {
             <Link href="/profile" className="flex items-center space-x-3 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-800">
               <div className="h-10 w-10 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center text-white font-semibold">
                 {session.user.image ? (
-                  <img
-                    src={session.user.image}
-                    alt={session.user.name || 'User'}
-                    className="h-full w-full rounded-full object-cover"
-                  />
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={session.user.image}
+                      alt={session.user.name || 'User'}
+                      className="h-full w-full rounded-full object-cover"
+                    />
+                  </>
                 ) : (
                   session.user.name?.[0]?.toUpperCase() || 'U'
                 )}
@@ -102,51 +81,46 @@ export default function Sidebar() {
         {/* Navigation Links */}
         <nav className="flex-1 space-y-1">
           <SidebarLink
-            href="/settings/account"
-            icon={<User className="h-5 w-5" />}
-            label="Account Settings"
+            href="/"
+            icon={<Home className="h-5 w-5" />}
+            label="Home"
             isCollapsed={isCollapsed}
           />
           <SidebarLink
-            href="/settings/preferences"
-            icon={<Settings className="h-5 w-5" />}
-            label="App Settings"
+            href="/recipes"
+            icon={<BookOpen className="h-5 w-5" />}
+            label="My Recipes"
             isCollapsed={isCollapsed}
           />
           <SidebarLink
-            href="/settings/notifications"
-            icon={<Bell className="h-5 w-5" />}
-            label="Notifications"
+            href="/connections"
+            icon={<Users className="h-5 w-5" />}
+            label="Connections"
             isCollapsed={isCollapsed}
           />
           <SidebarLink
-            href="/settings/privacy"
-            icon={<Shield className="h-5 w-5" />}
-            label="Privacy"
+            href="/saved"
+            icon={<Book className="h-5 w-5" />}
+            label="CREAtion Book"
             isCollapsed={isCollapsed}
           />
-
-          {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            className="flex w-full items-center space-x-3 rounded-lg p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-          >
-            {theme === 'light' ? (
-              <Moon className="h-5 w-5" />
-            ) : (
-              <Sun className="h-5 w-5" />
-            )}
-            {!isCollapsed && <span>Theme</span>}
-          </button>
-
           <SidebarLink
-            href="/help"
-            icon={<HelpCircle className="h-5 w-5" />}
-            label="Help & Support"
+            href="/ai-genius"
+            icon={<Sparkles className="h-5 w-5" />}
+            label="CREAMi Genius"
             isCollapsed={isCollapsed}
           />
         </nav>
+
+        {/* Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          className="flex w-full items-center space-x-3 rounded-lg p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+          title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+        >
+          {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+          {!isCollapsed && <span>Theme</span>}
+        </button>
 
         {/* Logout Button */}
         {session && (
