@@ -1,6 +1,5 @@
 import { Users, UserPlus, Search } from 'lucide-react'
 import Button from '@/components/ui/Button'
-import Input from '@/components/ui/Input'
 
 export default function ConnectionsPage() {
   return (
